@@ -17,7 +17,7 @@ class HeadHunterAPI:
     def get_request(self):
         """Метод для отправки запроса на hh, записывает json"""
 
-        for num in range(49):
+        for num in range(50):
             url = "https://api.hh.ru/vacancies"
             params = {"text": self.vacancies, "area": 113, "per_page": 25, "page": num}
             response = requests.get(url, params=params)
@@ -50,7 +50,7 @@ class HeadHunterAPI:
         with open(f"{self.vacancies}_hh_ru.json", "w", encoding="UTF-8") as file:
             json.dump(self.vacancies_dicts, file, indent=4, ensure_ascii=False)
         print(f"Отбор осуществлялся из {len(self.vac)} вакансий(проверка обращения к сервису)")
-        print(self.vacancies_dicts)
+        return self.vacancies_dicts
 
-hh = HeadHunterAPI("пайтон разработчик")
+hh = HeadHunterAPI("python developer")
 
