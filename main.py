@@ -6,7 +6,7 @@ def main():
     table_creator = TableCreator
 
     name_table_employers = input("Введите имя таблицы с работадателями:\n")
-    table_creator.create_emp(name_table_employers)
+    table_creator.create_company_table(name_table_employers)
 
     name_table_vacancies = input("Введите имя таблицы с вакансиями:\n")
     table_creator.create_vac(name_table_vacancies)
