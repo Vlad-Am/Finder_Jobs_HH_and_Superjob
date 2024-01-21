@@ -120,17 +120,17 @@ class DBManager:
         try:
             with connection:
                 with connection.cursor() as cursor:
-                    cursor.execute(f'''SELECT name_vacancy, url_vacancy, salary_from, salary_to
+                    cursor.execute(f'''SELECT name_vacancy, url_vacancy, salary_from, salary_to, requirement
                                         FROM {table_name_vac} 
-                                        WHERE name_vacancy LIKE '%{keyword}%'
+                                        WHERE requirement LIKE '%{keyword}%'
                                         ORDER BY salary_from DESC''')
                     vac_keyword = cursor.fetchall()
                     for vacancy in vac_keyword:
-                        name, url, sal_from, sal_to = vacancy
+                        name, url, sal_from, sal_to, requirement = vacancy
                         form_sal_from, form_sal_to = DBManager.format_salary(sal_from, sal_to)
                         vacancies_list.append(
                             f"Вакансия {name}: зарплата от {form_sal_from} до {form_sal_to}"
-                            f": ссылка на вакансию {url}")
+                            f": ссылка на вакансию {url}, требования: {requirement}")
         finally:
             if connection:
                 connection.close()

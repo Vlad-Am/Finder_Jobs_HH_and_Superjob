@@ -18,6 +18,7 @@ class TableCreator:
                                       url_vacancy varchar(200) NOT NULL,
                                       salary_from integer,
                                       salary_to integer,
+                                      requirement text,
                                       employer_id integer
                                       REFERENCES employers(employer_id))''')
                 print(f"Таблица {table_vacancies_name} создана успешно")

@@ -46,10 +46,12 @@ class HeadHunterAPI:
     def get_vacancies(self, employer_id: int) -> list[dict]:
         """Метод для обработки полученной информации по вакансиям"""
         vacancies_emp_dicts = []
-        # диапазон поиска страниц можно расширить или сузить,
-        # функцию по узнаванию количества страниц по запросу я написать не в силах))
+        # диапазон поиска страниц можно расширить или сузить
+        # как написать функцию по узнаванию количества страниц по запросу я нашел
+        # сюда смысла ее подтягивать не нашел
         for page in range(10):
             vacancies_data = json.loads(self.__get_page_vacancies(employer_id, page))
+
             if "errors" in vacancies_data:
                 return vacancies_data["errors"][0]["value"]
             for vacancy_data in vacancies_data["items"]:
@@ -61,6 +63,7 @@ class HeadHunterAPI:
                 vacancy_dict = {"id": vacancy_data["id"], "vacancy_name": vacancy_data["name"],
                                 "url": vacancy_data["alternate_url"], "salary_from": vacancy_data["salary"]["from"],
                                 "salary_to": vacancy_data["salary"]["to"],
+                                "requirement": vacancy_data["snippet"]["requirement"],
                                 "employer_id": vacancy_data["employer"]["id"]}
                 if vacancy_dict["salary_to"] is None:
                     vacancy_dict["salary_to"] = vacancy_dict["salary_from"]
@@ -107,13 +110,14 @@ class FillDB(HeadHunterAPI):
         conn = DBManager.create_connection()
         try:
             for vac in self.__get_vacancies_all():
+
                 try:
                     with conn:
                         with conn.cursor() as cursor:
                             cursor.execute(
-                                f"""INSERT INTO {table_name} VALUES (%s, %s, %s, %s, %s, %s)""",
+                                f"""INSERT INTO {table_name} VALUES (%s, %s, %s, %s, %s, %s, %s)""",
                                 (vac["id"], vac["vacancy_name"], vac["url"], vac["salary_from"], vac["salary_to"],
-                                 vac["employer_id"]))
+                                 vac["requirement"], vac["employer_id"]))
                 except psycopg2.errors.UniqueViolation:
                     continue
         except psycopg2.errors.UndefinedTable:
